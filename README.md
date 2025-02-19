@@ -10,7 +10,7 @@ Jan 23, 2025: Our paper is accepted to **ICLR 2025**!
 ### Paper
 Official source code for ["Divide and Translate: Compositional First-Order Logic Translation and Verification for Complex Logical Reasoning"](https://arxiv.org/abs/2410.08047), ICLR 2025 [[1]](#ref).
 
-TL;DR: We introduce CLOVER, a neurosymbolic approach that enhances logical reasoning ability of LLMs by compositional translation of natural language into first-order logic (FOL) and verification of logical semantics.
+TL;DR: We introduce CLOVER, a neurosymbolic approach that enhances logical reasoning ability of LLMs through compositional translation of natural language into first-order logic (FOL) and verification of logical semantics.
 
 ## Setup
 * python==3.9.19
