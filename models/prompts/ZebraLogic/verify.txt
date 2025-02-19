@@ -1,0 +1,131 @@
+### Instruction:
+Your task is to determine whether the given solution can be included in any of the possible scenarios that arise when the given sentence is set as a condition. First, you need to calculate all possible scenarios that can occur under the given sentence as a condition, and then check if the situation obtained by interpreting the solution through the given declarations falls into one of those scenarios. As shown in the various examples below, you should provide your answer along with a logical explanation for the reasoning behind it. Keep in mind that you should focus on logical conditions rather than relying on commonsense when performing the task.
+------
+### Input:
+Declarations:
+people = EnumSort([Peter, Alice, Bob, Eric, Arnold])
+nationalities = EnumSort([norwegian, german, dane, brit, swede])
+bookGenres = EnumSort([fantasy, biography, romance, mystery, science_fiction])
+foods = EnumSort([stir_fry, grilled_cheese, pizza, spaghetti, stew])
+colors = EnumSort([red, green, blue, yellow, white])
+animals = EnumSort([bird, dog, cat, horse, fish])
+lives = Function([people] -> [int])
+has_nationality = Function([people] -> [nationalities])
+has_bookGenre = Function([people] -> [bookGenres])
+has_food = Function([people] -> [foods])
+has_color = Function([people] -> [colors])
+has_animal = Function([people] -> [animals])
+ForAll([p:people], And(1 <= lives(p), lives(p) <= 5))
+Solution:
+people -> lives, has_nationality, has_bookGenre, has_food, has_color, has_animal
+Peter  -> -, -, -, -, -, -
+Alice  -> 3, -, -, pizza, -, -
+Bob    -> -, -, -, -, -, -
+Eric   -> 2, dane, -, -, -, -
+Arnold -> -, -, -, -, -, -
+Sentence:
+There is one house between the Dane and the person who is a pizza lover
+### Response:
+Analysis:
+The dane lives in house 2. The person who is a pizza lover lives in house 3. House 2 and house 3 are located next to each other. Therefore, the solution does not logically satisfy the sentence, "There is one house between the Dane and the person who is a pizza lover".
+Answer:
+No
+------
+### Input:
+Declarations:
+people = EnumSort([Peter, Alice, Bob, Eric, Arnold])
+nationalities = EnumSort([norwegian, german, dane, brit, swede])
+bookGenres = EnumSort([fantasy, biography, romance, mystery, science_fiction])
+foods = EnumSort([stir_fry, grilled_cheese, pizza, spaghetti, stew])
+colors = EnumSort([red, green, blue, yellow, white])
+animals = EnumSort([bird, dog, cat, horse, fish])
+lives = Function([people] -> [int])
+has_nationality = Function([people] -> [nationalities])
+has_bookGenre = Function([people] -> [bookGenres])
+has_food = Function([people] -> [foods])
+has_color = Function([people] -> [colors])
+has_animal = Function([people] -> [animals])
+ForAll([p:people], And(1 <= lives(p), lives(p) <= 5))
+Solution:
+people -> lives, has_nationality, has_bookGenre, has_food, has_color, has_animal
+Peter  -> 1, -, -, -, -, fish
+Alice  -> -, -, -, -, -, -
+Bob    -> -, -, -, -, -, -
+Eric   -> -, -, -, -, -, -
+Arnold -> 3, -, science_fiction, -, -, -
+Sentence:
+The fish enthusiast is directly left of the person who loves science fiction books
+### Response:
+Analysis:
+The fish enthusiast lives in house 1. The person who loves science fiction books lives in house 3. House 1 is not directly left of house 3. Therefore, the solution does not logically satisfy the sentence, "The fish enthusiast is directly left of the person who loves science fiction books".
+Answer:
+No
+------
+### Input:
+Declarations:
+people = EnumSort([Peter, Alice, Bob, Eric, Arnold])
+nationalities = EnumSort([norwegian, german, dane, brit, swede])
+bookGenres = EnumSort([fantasy, biography, romance, mystery, science_fiction])
+foods = EnumSort([stir_fry, grilled_cheese, pizza, spaghetti, stew])
+colors = EnumSort([red, green, blue, yellow, white])
+animals = EnumSort([bird, dog, cat, horse, fish])
+lives = Function([people] -> [int])
+has_nationality = Function([people] -> [nationalities])
+has_bookGenre = Function([people] -> [bookGenres])
+has_food = Function([people] -> [foods])
+has_color = Function([people] -> [colors])
+has_animal = Function([people] -> [animals])
+ForAll([p:people], And(1 <= lives(p), lives(p) <= 5))
+Solution:
+people -> lives, has_nationality, has_bookGenre, has_food, has_color, has_animal
+Peter  -> -, -, -, -, -, -
+Alice  -> -, -, -, -, -, -
+Bob    -> -, -, -, -, -, -
+Eric   -> 5, dane, -, -, -, -
+Arnold -> 2, -, -, -, blue, -
+Sentence:
+The person who loves blue is somewhere to the left of the Dane
+### Response:
+Analysis:
+The person who loves blue lives in house 2. The dane lives in house 5. House 2 is somewhere to the left of house 5. Therefore, the solution logically satisfies the sentence, "The person who loves blue is somewhere to the left of the Dane".
+Answer:
+Yes
+------
+### Input:
+Declarations:
+people = EnumSort([Peter, Alice, Bob, Eric, Arnold])
+nationalities = EnumSort([norwegian, german, dane, brit, swede])
+bookGenres = EnumSort([fantasy, biography, romance, mystery, science_fiction])
+foods = EnumSort([stir_fry, grilled_cheese, pizza, spaghetti, stew])
+colors = EnumSort([red, green, blue, yellow, white])
+animals = EnumSort([bird, dog, cat, horse, fish])
+lives = Function([people] -> [int])
+has_nationality = Function([people] -> [nationalities])
+has_bookGenre = Function([people] -> [bookGenres])
+has_food = Function([people] -> [foods])
+has_color = Function([people] -> [colors])
+has_animal = Function([people] -> [animals])
+ForAll([p:people], And(1 <= lives(p), lives(p) <= 5))
+Solution:
+people -> lives, has_nationality, has_bookGenre, has_food, has_color, has_animal
+Peter  -> -, -, -, -, -, -
+Alice  -> -, -, -, -, -, -
+Bob    -> -, norwegian, fantasy, -, -, -
+Eric   -> -, -, -, -, -, -
+Arnold -> -, -, -, -, -, -
+Sentence:
+The person who loves fantasy books is the Norwegian
+### Response:
+Analysis:
+The person who loves fantasy books is Bob, and Bob is the Norwegian. Therefore, the solution logically satisfies the sentence, "The person who loves fantasy books is the Norwegian".
+Answer:
+Yes
+------
+### Input:
+Declarations:
+[[DECLARATIONS]]
+Solution:
+[[SOLUTION]]
+Sentence:
+[[SENTENCE]]
+### Response:

@@ -1,0 +1,127 @@
+### Definition
+Logical dependency structures consist of components and their logical dependencies.
+There are three types of components: logic units (U), logic couplers (C), and logic dependents (D). Logic units are grammatically correct sentences that have logical meaning which only contain one function and its entire arguments. If a natural language has a logical meaning, it could be translated into a first-order logic with given declarations in the task. Arguments are either corresponding sets of words in the original sentence or additional sets of words that are semantically omitted in the original sentence.
+Logic couplers are conjunctions or an operator named merge. Conjunctions include both the ones written in the original sentence and semantically omitted. Merge combines two logic units with duplicated arguments without adding any conjunction.
+Logic dependents are dependents of a function or one of its arguments that has logical meaning. Logic dependents cannot be included in logic units. 
+Logical dependency is indicated with X -> Y where X and Y are one of the components declared. If one component (X) depends on another component (Y), the logical dependency should be notated with X -> Y where X is called dependent and Y is called head. If there are multiple logical dependencies, each notation should be separated by a semi-colon(;).
+
+### Instruction
+Given declarations and a sentence, generate different possible logical dependency structures of the sentence. When generating a logical dependency structure, first declare each component and indicate the dependency of one and another. The followings rules must be satisfied:
+1. All components except for one should be dependent on another component.
+2. Conjunctions could be included in logic units or logic dependents, while not being allocated as logic couplers.
+3. No logic coupler can be a head of logic dependent.
+4. If a logic coupler or a logic dependent includes sets of words that are not adjacent, then separate them with "...".
+5. Assume that a logic dependent D depends on a logic unit U. After integrating D into U, it should also has a logical meaning.
+6. Any logic dependent cannot be a conjunction itself.
+------
+### Declarations
+Variables:
+people = EnumSort([Vladimir, Wendy])
+meals = EnumSort([breakfast, lunch, dinner, snack])
+foods = EnumSort([fish, hot_cakes, macaroni, omelet, poached_eggs])
+Functions:
+eats = Function([people, meals] -> [foods])
+### Sentence
+At no meal does Vladimir eat the same kind of food as Wendy
+### Structures
+### 1:
+U1="At no meal does Vladimir eat the same kind of food as Wendy"
+None
+------
+### Declarations
+technicians = EnumSort([Stacy, Urma, Wim, Xena, Yolanda, Zane])
+machines = EnumSort([radios, televisions, VCRs])
+repairs = Function([technicians, machines] -> [bool])
+### Sentence
+Xena and exactly three other technicians repair radios
+### Structures
+### 1:
+U1="Xena repairs radios", U2="exactly three technicians repair radios", D1="other", C1="and"
+D1 -> U2; U1 -> C1; U2 -> C1
+### 2:
+U1="Xena repairs radios", D1="and three other technicians", D2="exactly"
+D1 -> U1; D2 -> D1
+### 3:
+U1 = “Some technicians repair radios”, D1=“Xena and exactly three other technicians”
+D1 -> U1
+------
+### Declarations
+technicians = EnumSort([Stacy, Urma, Wim, Xena, Yolanda, Zane])
+machines = EnumSort([radios, televisions, VCRs])
+repairs = Function([technicians, machines] -> [bool])
+### Sentence
+Stacy does not repair any type of machine that Yolanda repairs
+### Structures
+### 1:
+U1="Stacy repairs any type of machine", U2="Yolanda repairs any type of machine", D1="does not", C1="that"
+D1 -> U1; U1 -> C1; U2 -> C1
+### 2:
+U1="Stacy repairs any type of machine", D1="does not", D2="that Yolanda repairs"
+D1 -> U1; D2 -> U1
+------
+### Declarations
+candidates = EnumSort([Q, R, S, T, U])
+meetings = EnumSort([1, 2, 3])
+speaks = Function([meetings, candidates] -> [int])
+ForAll([m:meetings, c:candidates], And(1 <= speaks(m, c), speaks(m, c) <= 5))
+### Sentence
+each candidate must speak either first or second at at least one of the meetings
+### Structures
+### 1:
+U1="each candidate must speak first at one of the meetings", U2="each candidate must speak second at one of the meetings", D1="at least", C1="either ... or"
+D1 -> U1; D1 -> U2; U1 -> C1; U2 -> C1
+### 2:
+U1="each candidate speaks at one of the orders at one of the meetings”, D1="must", D2="at least”, D3=“either first or second“
+D1 -> U1; D2 -> U1; D3 -> U1
+### 3:
+U1="each candidate must speak either first or second at one of the meetings", D1="at least"
+D1 -> U1
+### 4:
+U1="each candidate speaks first at one of the meetings", D1="must", D2="at least", D3="either ... or second"
+D1 -> U1; D2 -> U1; D3 -> U1
+------
+### Declarations
+candidates = EnumSort([Q, R, S, T, U])
+meetings = EnumSort([1, 2, 3])
+speaks = Function([meetings, candidates] -> [int])
+ForAll([m:meetings, c:candidates], And(1 <= speaks(m, c), speaks(m, c) <= 5))
+### Sentence
+no candidate can speak fourth at more than one of the meetings
+### Structures
+### 1:
+U1="no candidate speaks fourth at one of the meetings", D1="can", D2="more than"
+D1 -> U1; D2 -> U1
+------
+### Declarations
+interns = EnumSort([Farber, Gombarick, Hall, Jackson, Kanze, Lha])
+stories = EnumSort([Romania, Spain, Tuscany])
+assistants = EnumSort([photographer, writer])
+assigned = Function([interns] -> [stories])
+trained = Function([interns] -> [assistants])
+### Sentence
+each story is assigned a team of two interns—one photographer's assistant and one writer's assistant
+### Structures
+### 1:
+U1="each story is assigned an intern", U2="There is an intern—a photographer's assistant", U3="There is an intern—a writer's assistant", D1="a team of two", C1="and", C2="(merge)"
+D1 -> U1; U2 -> C1; U3 -> C1; U1 -> C2; C1 -> C2
+### 2:
+U1="each story is assigned an intern", U2="There is an intern—a photographer's assistant", U3="There is an intern—a writer's assistant", C1="(merge)", C2="(merge)", C3="a team of two ... and"
+U1 -> C1; U2 -> C1; U1 -> C2; U3 -> C2; C1 -> C3; C2 -> C3
+### 3:
+U1="each story is assigned an intern", U2="There is an intern—a photographer's assistant", D1="a team of two", D2="and a writer's assistant", C1="(merge)"
+D1 -> U1; D2 -> U2; U1 -> C1; U2 -> C1
+### 4:
+U1="each story is assigned an intern", D1="—a photographer's assistant", D2="—a writer's assistant", C1="a team of two ... and"
+D1 -> U1; D2 -> U1; U1 -> C1
+### 5:
+U1="each story is assigned an intern", D1="—a photographer's assistant", D2="a team of two ... and a writer's assistant"
+D1 -> U1; D2 -> D1
+### 6:
+U1="each story is assigned a team of two interns", D1="—one photographer's assistant and one writer's assistant"
+D1 -> U1
+------
+### Declarations
+[[DECLARATIONS]]
+### Sentence
+[[SENTENCE]]
+### Structures

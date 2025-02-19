@@ -1,0 +1,138 @@
+### Definition
+Logical dependency structures consist of components and their logical dependencies.
+There are three types of components: logic units (U), logic couplers (C), and logic dependents (D). Logic units are grammatically correct sentences that have logical meaning which only contain one function and its entire arguments. If a natural language has a logical meaning, it could be translated into a first-order logic with given declarations in the task. Arguments are either corresponding sets of words in the original sentence or additional sets of words that are semantically omitted in the original sentence.
+Logic couplers are conjunctions or an operator named merge. Conjunctions include both the ones written in the original sentence and semantically omitted. Merge combines two logic units with duplicated arguments without adding any conjunction.
+Logic dependents are dependents of a function or one of its arguments that has logical meaning. Logic dependents cannot be included in logic units. 
+Logical dependency is indicated with X -> Y where X and Y are one of the components declared. If one component (X) depends on another component (Y), the logical dependency should be notated with X -> Y where X is called dependent and Y is called head. If there are multiple logical dependencies, each notation should be separated by a semi-colon(;).
+
+### Instruction
+Given declarations and a sentence, generate different possible logical dependency structures of the sentence. When generating a logical dependency structure, first declare each component and indicate the dependency of one and another. The followings rules must be satisfied:
+1. All components except for one should be dependent on another component.
+2. Conjunctions could be included in logic units or logic dependents, while not being allocated as logic couplers.
+3. No logic coupler can be a head of logic dependent.
+4. If a logic coupler or a logic dependent includes sets of words that are not adjacent, then separate them with "...".
+5. Assume that a logic dependent D depends on a logic unit U. After integrating D into U, it should also has a logical meaning.
+6. Any logic dependent cannot be a conjunction itself.
+------
+### Declarations
+people = EnumSort([Peter, Alice, Bob, Eric, Arnold])
+nationalities = EnumSort([norwegian, german, dane, brit, swede])
+bookGenres = EnumSort([fantasy, biography, romance, mystery, science_fiction])
+foods = EnumSort([stir_fry, grilled_cheese, pizza, spaghetti, stew])
+colors = EnumSort([red, green, blue, yellow, white])
+animals = EnumSort([bird, dog, cat, horse, fish])
+lives = Function([people] -> [int])
+has_nationality = Function([people] -> [nationalities])
+has_bookGenre = Function([people] -> [bookGenres])
+has_food = Function([people] -> [foods])
+has_color = Function([people] -> [colors])
+has_animal = Function([people] -> [animals])
+ForAll([p:people], And(1 <= lives(p), lives(p) <= 5))
+### Sentence
+Each house is occupied by a different person
+### Structures
+### 1:
+U1="Each house is occupied by a different person"
+None
+------
+### Declarations
+people = EnumSort([Peter, Alice, Bob, Eric, Arnold])
+nationalities = EnumSort([norwegian, german, dane, brit, swede])
+bookGenres = EnumSort([fantasy, biography, romance, mystery, science_fiction])
+foods = EnumSort([stir_fry, grilled_cheese, pizza, spaghetti, stew])
+colors = EnumSort([red, green, blue, yellow, white])
+animals = EnumSort([bird, dog, cat, horse, fish])
+lives = Function([people] -> [int])
+has_nationality = Function([people] -> [nationalities])
+has_bookGenre = Function([people] -> [bookGenres])
+has_food = Function([people] -> [foods])
+has_color = Function([people] -> [colors])
+has_animal = Function([people] -> [animals])
+ForAll([p:people], And(1 <= lives(p), lives(p) <= 5))
+### Sentence
+People have unique favorite book genres
+### Structures
+### 1:
+U1="People have unique favorite book genres"
+None
+------
+### Declarations
+people = EnumSort([Peter, Alice, Bob, Eric, Arnold])
+nationalities = EnumSort([norwegian, german, dane, brit, swede])
+bookGenres = EnumSort([fantasy, biography, romance, mystery, science_fiction])
+foods = EnumSort([stir_fry, grilled_cheese, pizza, spaghetti, stew])
+colors = EnumSort([red, green, blue, yellow, white])
+animals = EnumSort([bird, dog, cat, horse, fish])
+lives = Function([people] -> [int])
+has_nationality = Function([people] -> [nationalities])
+has_bookGenre = Function([people] -> [bookGenres])
+has_food = Function([people] -> [foods])
+has_color = Function([people] -> [colors])
+has_animal = Function([people] -> [animals])
+ForAll([p:people], And(1 <= lives(p), lives(p) <= 5))
+### Sentence
+The person who loves fantasy books is the Norwegian
+### Structures
+### 1:
+U1="A person loves fantasy books", U2="A person is the Norwegian", C1="who"
+U1 -> C1; U2 -> C1
+### 2:
+U1="A person is the Norwegian", D1="who loves fantasy books"
+D1 -> U1
+------
+### Declarations
+people = EnumSort([Peter, Alice, Bob, Eric, Arnold])
+nationalities = EnumSort([norwegian, german, dane, brit, swede])
+bookGenres = EnumSort([fantasy, biography, romance, mystery, science_fiction])
+foods = EnumSort([stir_fry, grilled_cheese, pizza, spaghetti, stew])
+colors = EnumSort([red, green, blue, yellow, white])
+animals = EnumSort([bird, dog, cat, horse, fish])
+lives = Function([people] -> [int])
+has_nationality = Function([people] -> [nationalities])
+has_bookGenre = Function([people] -> [bookGenres])
+has_food = Function([people] -> [foods])
+has_color = Function([people] -> [colors])
+has_animal = Function([people] -> [animals])
+ForAll([p:people], And(1 <= lives(p), lives(p) <= 5))
+### Sentence
+The cat lover and the person who loves biography books are next to each other
+### Structures
+### 1:
+U1="A person loves a cat", U2="A person loves biography books", U3="Two people are next to each other", C1="and"
+U1 -> C1; U2 -> C1; C1 -> U3
+### 2:
+U1="Two people are next to each other", D1="the cat lover and the person who loves biography books"
+D1 -> U1
+------
+### Declarations
+people = EnumSort([Peter, Alice, Bob, Eric, Arnold])
+nationalities = EnumSort([norwegian, german, dane, brit, swede])
+bookGenres = EnumSort([fantasy, biography, romance, mystery, science_fiction])
+foods = EnumSort([stir_fry, grilled_cheese, pizza, spaghetti, stew])
+colors = EnumSort([red, green, blue, yellow, white])
+animals = EnumSort([bird, dog, cat, horse, fish])
+lives = Function([people] -> [int])
+has_nationality = Function([people] -> [nationalities])
+has_bookGenre = Function([people] -> [bookGenres])
+has_food = Function([people] -> [foods])
+has_color = Function([people] -> [colors])
+has_animal = Function([people] -> [animals])
+ForAll([p:people], And(1 <= lives(p), lives(p) <= 5))
+### Sentence
+There are two houses between the Norwegian and Alice
+### Structures
+### 1:
+U1="A person is Norwegian", U2="There are two houses between a person and Alice"
+U1 -> U2
+### 2:
+U1="A person is Norwegian", U2="A person is Alice", U3="There are two houses between two people", C1="and"
+U1 -> C1; U2 -> C1; C1 -> U3
+### 3:
+U1="There are two houses between two people", D1="the Norwegian and Alice"
+D1 -> U1
+------
+### Declarations
+[[DECLARATIONS]]
+### Sentence
+[[SENTENCE]]
+### Structures

@@ -1,0 +1,87 @@
+### Instruction
+Given declarations, the task is to translate a sentence into a first order logic program. In order to do that, translate the given accumulation of components step by step to finally translate the original sentence.
+------
+# Declarations
+people = EnumSort([Peter, Alice, Bob, Eric, Arnold])
+nationalities = EnumSort([norwegian, german, dane, brit, swede])
+bookGenres = EnumSort([fantasy, biography, romance, mystery, science_fiction])
+foods = EnumSort([stir_fry, grilled_cheese, pizza, spaghetti, stew])
+colors = EnumSort([red, green, blue, yellow, white])
+animals = EnumSort([bird, dog, cat, horse, fish])
+lives = Function([people] -> [int])
+has_nationality = Function([people] -> [nationalities])
+has_bookGenre = Function([people] -> [bookGenres])
+has_food = Function([people] -> [foods])
+has_color = Function([people] -> [colors])
+has_animal = Function([people] -> [animals])
+ForAll([p:people], And(1 <= lives(p), lives(p) <= 5))
+
+# Sentence
+Each house is occupied by a different person
+# Accumulation
+Each house is occupied by a different person
+
+# Sentence
+People have unique favorite book genres
+# Accumulation
+People have unique favorite book genres
+
+# Sentence
+The person who loves fantasy books is the Norwegian
+# Accumulation
+A person loves fantasy books
+A person is the Norwegian
+The person who loves fantasy books is the Norwegian
+
+# Sentence
+The cat lover and the person who loves biography books are next to each other
+# Accumulation
+A person loves a cat
+A person loves biography books
+Two people are next to each other
+A person loves cat and another person loves biography books
+The cat lover and the person who loves biography books are next to each other
+
+# Sentence
+There are two houses between the Norwegian and Alice
+# Accumulation
+There are two houses between two people
+There are two houses between the Norwegian and Alice
+###
+# Sentence
+Each house is occupied by a different person
+# Translation
+Each house is occupied by a different person ::: Distinct([p:people], lives(p))
+
+# Sentence
+People have unique favorite book genres
+# Translation
+People have unique favorite book genres ::: Distinct([p:people], has_bookGenre(p))
+
+# Sentence
+The person who loves fantasy books is the Norwegian
+# Translation
+A person loves fantasy books ::: Exists([p:people], has_bookGenre(p) == fantasy)
+A person is the Norwegian ::: Exists([p:people], has_nationality(p) == norwegian)
+The person who loves fantasy books is the Norwegian ::: Exists([p:people], And(has_bookGenre(p) == fantasy, has_nationality(p) == norwegian))
+
+# Sentence
+The cat lover and the person who loves biography books are next to each other
+# Translation
+A person loves a cat ::: Exists([p:people], has_animal(p) == cat)
+A person loves biography books ::: Exists([p:people], has_bookGenre(p) == biography)
+Two people are next to each other ::: Exists([p1:people, p2:people], Abs(lives(p1) - lives(p2)) == 1)
+A person loves cat and another person loves biography books ::: Exists([p1:people, p2:people], And(has_animal(p1) == cat, has_bookGenre(p2) == biography, p1 != p2))
+The cat lover and the person who loves biography books are next to each other ::: Exists([p1:people, p2:people], And(has_animal(p1) == cat, has_bookGenre(p2) == biography, Abs(lives(p1) - lives(p2)) == 1))
+
+# Sentence
+There are two houses between the Norwegian and Alice
+# Translation
+There are two houses between two people ::: Exists([p1:people, p2:people], Abs(lives(p1) - lives(p2)) == 3)
+There are two houses between the Norwegian and Alice ::: Exists([p:people], And(has_nationality(p) == norwegian, Abs(lives(p) - lives(Alice)) == 3))
+------
+# Declarations
+[[DECLARATIONS]]
+
+[[CONSTRAINTS]]
+###

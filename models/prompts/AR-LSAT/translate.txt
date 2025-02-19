@@ -1,0 +1,277 @@
+### Instruction
+Given declarations, the task is to translate a sentence into a first order logic program. In order to do that, translate the given accumulation of components step by step to finally translate the original sentence.
+------
+# Declarations
+people = EnumSort([Vladimir, Wendy])
+meals = EnumSort([breakfast, lunch, dinner, snack])
+foods = EnumSort([fish, hot_cakes, macaroni, omelet, poached_eggs])
+eats = Function([people, meals] -> [foods])
+
+# Sentence
+At no meal does Vladimir eat the same kind of food as Wendy
+# Accumulation
+At no meal does Vladimir eat the same kind of food as Wendy
+
+# Sentence
+Neither of them eats the same kind of food more than once during the day
+# Accumulation
+Neither of them eats the same kind of food more than once during the day
+
+# Sentence
+For breakfast, each eats exactly one of the following: hot cakes, poached eggs, or omelets
+# Accumulation
+For breakfast, each eats exactly one of the following: hot cakes, poached eggs, or omelets
+
+# Sentence
+Vladimir eats fish
+# Accumulation
+Vladimir eats fish
+###
+# Sentence
+At no meal does Vladimir eat the same kind of food as Wendy
+# Translation
+At no meal does Vladimir eat the same kind of food as Wendy ::: ForAll([m:meals], eats(Vladimir, m) != eats(Wendy, m))
+
+# Sentence
+Neither of them eats the same kind of food more than once during the day
+# Translation
+Neither of them eats the same kind of food more than once during the day ::: ForAll([p:people], ForAll([m1:meals, m2:meals], Implies(m1 != m2, eats(p, m1) != eats(p, m2))))
+Neither of them eats the same kind of food more than once during the day ::: ForAll([p:people], Distinct([m:meals], eats(p, m)))
+
+# Sentence
+For breakfast, each eats exactly one of the following: hot cakes, poached eggs, or omelets
+# Translation
+For breakfast, each eats exactly one of the following: hot cakes, poached eggs, or omelets ::: ForAll([p:people], Or(eats(p, breakfast) == hot_cakes, eats(p, breakfast) == poached_eggs, eats(p, breakfast) == omelet))
+
+# Sentence
+Vladimir eats fish
+# Translation
+Vladimir eats fish ::: Exists([m:meals], eats(Vladimir, m) == fish)
+------
+# Declarations
+technicians = EnumSort([Stacy, Urma, Wim, Xena, Yolanda, Zane])
+machines = EnumSort([radios, televisions, VCRs])
+repairs = Function([technicians, machines] -> [bool])
+
+# Sentence
+each technician repairs machines of at least one of the following three types
+# Accumulation
+each technician repairs machines of one type
+each technician repairs machines of one of the following three types
+each technician repairs machines of at least one of the following three types
+
+# Sentence
+Xena and exactly three other technicians repair radios
+# Accumulation
+Xena repairs radios
+exactly three technicians repair radios
+exactly three other technicians repair radios
+Xena and exactly three other technicians repair radios
+
+# Sentence
+Stacy does not repair any type of machine that Yolanda repairs
+# Accumulation
+Stacy repairs any type of machine
+Stacy does not repair any type of machine
+Stacy does not repair any type of machine that Yolanda repairs
+
+# Sentence
+Zane repairs more types of machines than Yolanda repairs
+# Accumulation
+Zane repairs more types of machines
+Zane repairs more types of machines than Yolanda repairs
+
+# Sentence
+Urma repairs exactly two types of machines
+# Accumulation
+Urma repairs exactly two types of machines
+
+# Sentence
+Stacy and Urma repair all and only the same types of machines as each other
+# Accumulation
+Stacy and Urma repair all and only the same types of machines
+Stacy and Urma repair all and only the same types of machines as each other
+###
+# Sentence
+each technician repairs machines of at least one of the following three types
+# Translation
+each technician repairs machines of one type ::: ForAll([t:technicians], Count([m:machines], repairs(t, m)) == 1)
+each technician repairs machines of one of the following three types ::: ForAll([t:technicians], Exists([m:machines], repairs(t, m)))
+each technician repairs machines of at least one of the following three types ::: ForAll([t:technicians], Count([m:machines], repairs(t, m)) >= 1)
+
+# Sentence
+Xena and exactly three other technicians repair radios
+# Translation
+Xena repairs radios ::: repairs(Xena, radios)
+exactly three technicians repair radios ::: Count([t:technicians], repairs(t, radios)) == 3
+exactly three other technicians repair radios ::: Count([t:technicians], And(t != Xena, repairs(t, radios))) == 3
+Xena and exactly three other technicians repair radios ::: And(repairs(Xena, radios), Count([t:technicians], And(t != Xena, repairs(t, radios))) == 3)
+
+# Sentence
+Stacy does not repair any type of machine that Yolanda repairs
+# Translation
+Stacy repairs any type of machine ::: ForAll([m:machines], repairs(Stacy, m))
+Stacy does not repair any type of machine ::: ForAll([m:machines], Not(repairs(Stacy, m)))
+Stacy does not repair any type of machine that Yolanda repairs ::: ForAll([m:machines], Implies(repairs(Yolanda, m), Not(repairs(Stacy, m))))
+
+# Sentence
+Zane repairs more types of machines than Yolanda repairs
+# Translation
+Zane repairs more types of machines ::: Count([m:machines], repairs(Zane, m)) > Count([m:machines], _)
+Zane repairs more types of machines than Yolanda repairs ::: Count([m:machines], repairs(Zane, m)) > Count([m:machines], repairs(Yolanda, m))
+
+# Sentence
+Urma repairs exactly two types of machines
+# Translation
+Urma repairs exactly two types of machines ::: Count([m:machines], repairs(Urma, m)) == 2
+
+# Sentence
+Stacy and Urma repair all and only the same types of machines as each other
+# Translation
+Stacy and Urma repair all and only the same types of machines ::: ForAll([m:machines], repairs(Stacy, m) == repairs(Urma, m))
+Stacy and Urma repair all and only the same types of machines as each other ::: ForAll([m:machines], repairs(Stacy, m) == repairs(Urma, m))
+------
+# Declarations
+valves = EnumSort([G, H, I, K, L, N, O, P])
+opened = Function([valves] -> [int])
+ForAll([v:valves], And(1 <= opened(v), opened(v) <= 8))
+
+# Sentence
+no two valves are opened at the same time
+# Accumulation
+no two valves are opened at the same time
+
+# Sentence
+H is the fifth valve
+# Accumulation
+H is the fifth valve
+###
+# Sentence
+no two valves are opened at the same time
+# Translation
+no two valves are opened at the same time ::: ForAll([v1:valves, v2:valves], Implies(v1 != v2, opened(v1) != opened(v2)))
+no two valves are opened at the same time ::: Distinct([v:valves], opened(v))
+
+# Sentence
+H is the fifth valve
+# Translation
+H is the fifth valve ::: opened(H) == 5
+------
+# Declarations
+candidates = EnumSort([Q, R, S, T, U])
+meetings = EnumSort([1, 2, 3])
+speaks = Function([meetings, candidates] -> [int])
+ForAll([m:meetings, c:candidates], And(1 <= speaks(m, c), speaks(m, c) <= 5))
+
+# Sentence
+no two candidates will speak in the same time slot as each other at any meeting
+# Accumulation
+no two candidates will speak in the same time slot at any meeting
+no two candidates will speak in the same time slot as each other at any meeting
+
+# Sentence
+each candidate must speak either first or second at at least one of the meetings
+# Accumulation
+each candidate speaks first at one meeting
+each candidate speaks first at one of the meetings
+each candidate must speak first at one of the meetings
+each candidate must speak first at at least one of the meetings
+each candidate must speak either first or second at at least one of the meetings
+
+# Sentence
+any candidate who speaks fifth at any of the meetings must speak first at at least one of the other meetings
+# Accumulation
+any candidate must speak first at one meeting
+any candidate must speak first at one of the meetings
+any candidate must speak first at at least one of the meetings
+any candidate who speaks fifth at any of the meetings must speak first at at least one of the other meetings
+
+# Sentence
+no candidate can speak fourth at more than one of the meetings
+# Accumulation
+no candidate can speak fourth at one of the meetings
+no candidate can speak fourth at more than one of the meetings
+
+# Sentence
+R speaks fourth and fifth at meeting 1
+# Accumulation
+R speaks fourth at meeting 1
+R speaks fifth at meeting 1
+R speaks fourth and fifth at meeting 1
+###
+# Sentence
+no two candidates will speak in the same time slot as each other at any meeting
+# Translation
+no two candidates will speak in the same time slot at any meeting ::: ForAll([m:meetings], ForAll([c1:candidates, c2:candidates], Implies(c1 != c2, speaks(m, c1) != speaks(m, c2))))
+no two candidates will speak in the same time slot as each other at any meeting ::: ForAll([m:meetings], ForAll([c1:candidates, c2:candidates], Implies(c1 != c2, speaks(m, c1) != speaks(m, c2))))
+no two candidates will speak in the same time slot as each other at any meeting ::: ForAll([m:meetings], Distinct([c:candidates], speaks(m, c)))
+
+# Sentence
+each candidate must speak either first or second at at least one of the meetings
+# Translation
+each candidate speaks first at one meeting ::: ForAll([c:candidates], Count([m:meetings], speaks(m, c) == 1) == 1)
+each candidate speaks first at one of the meetings ::: ForAll([c:candidates], Exists([m:meetings], speaks(m, c) == 1))
+each candidate must speak first at one of the meetings ::: ForAll([c:candidates], Exists([m:meetings], speaks(m, c) == 1))
+each candidate must speak first at at least one of the meetings ::: ForAll([c:candidates], Exists([m:meetings], speaks(m, c) == 1))
+each candidate must speak either first or second at at least one of the meetings ::: ForAll([c:candidates], Exists([m:meetings], Or(speaks(m, c) == 1, speaks(m, c) == 2)))
+
+# Sentence
+any candidate who speaks fifth at any of the meetings must speak first at at least one of the other meetings
+# Translation
+any candidate must speak first at one meeting ::: ForAll([c:candidates], Count([m:meetings], speaks(m, c) == 1) == 1)
+any candidate must speak first at one of the meetings ::: ForAll([c:candidates], Exists([m:meetings], speaks(m, c) == 1))
+any candidate must speak first at at least one of the meetings ::: ForAll([c:candidates], Exists([m:meetings], speaks(m, c) == 1))
+any candidate who speaks fifth at any of the meetings must speak first at at least one of the other meetings ::: ForAll([c:candidates], Implies(Exists([m:meetings], speaks(m, c) == 5), Exists([m:meetings], speaks(m, c) == 1)))
+
+# Sentence
+no candidate can speak fourth at more than one of the meetings
+# Translation
+no candidate can speak fourth at one of the meetings ::: ForAll([c:candidates], Not(Exists([m:meetings], speaks(m, c) == 4)))
+no candidate can speak fourth at more than one of the meetings ::: ForAll([c:candidates], Not(Count([m:meetings], speaks(m, c) == 4) > 1))
+no candidate can speak fourth at more than one of the meetings ::: ForAll([c:candidates], Count([m:meetings], speaks(m, c) == 4) <= 1)
+
+# Sentence
+R speaks fourth and fifth at meeting 1
+# Translation
+R speaks fourth at meeting 1 ::: speaks(1, R) == 4
+R speaks fifth at meeting 1 ::: speaks(1, R) == 5
+R speaks fourth and fifth at meeting 1 ::: And(speaks(1, R) == 4, speaks(1, R) == 5)
+------
+# Declarations
+interns = EnumSort([Farber, Gombarick, Hall, Jackson, Kanze, Lha])
+stories = EnumSort([Romania, Spain, Tuscany])
+assistants = EnumSort([photographer, writer])
+assigned = Function([interns] -> [stories])
+trained = Function([interns] -> [assistants])
+
+# Sentence
+each story is assigned a team of two interns—one photographer's assistant and one writer's assistant
+# Accumulation
+each story is assigned an intern
+each story is assigned an intern-a photographer's assistant
+each story is assigned an intern-a writer's assistant
+each story is assigned a team of two interns—one photographer's assistant and one writer's assistant
+
+# Sentence
+Farber is assigned to Tuscany
+# Accumulation
+Farber is assigned to Tuscany
+###
+# Sentence
+each story is assigned a team of two interns—one photographer's assistant and one writer's assistant
+# Translation
+each story is assigned an intern ::: ForAll([s:stories], Exists([i:interns], assigned(i) == s))
+each story is assigned an intern-a photographer's assistant ::: ForAll([s:stories], Exists([i:interns], And(assigned(i) == s, trained(i) == photographer)))
+each story is assigned an intern-a writer's assistant ::: ForAll([s:stories], Exists([i:interns], And(assigned(i) == s, trained(i) == writer)))
+each story is assigned a team of two interns—one photographer's assistant and one writer's assistant ::: ForAll([s:stories], Exists([i1:interns, i2:interns], And(i1 != i2, And(assigned(i1) == s, assigned(i2) == s, trained(i1) == photographer, trained(i2) == writer))))
+
+# Sentence
+Farber is assigned to Tuscany
+# Translation
+Farber is assigned to Tuscany ::: assigned(Farber) == Tuscany
+------
+# Declarations
+[[DECLARATIONS]]
+
+[[CONSTRAINTS]]
+###

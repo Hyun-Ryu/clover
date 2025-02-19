@@ -1,0 +1,133 @@
+### Definition
+Logical dependency structures consist of components and their logical dependencies.
+There are three types of components: logic units (U), logic couplers (C), and logic dependents (D). Logic units are grammatically correct sentences that have logical meaning which only contain one function and its entire arguments. If a natural language has a logical meaning, it could be translated into a first-order logic with given declarations in the task. Arguments are either corresponding sets of words in the original sentence or newly declared variable that is semantically omitted in the original sentence.
+Logic couplers are conjunctions or an operator named merge. Conjunctions include both the ones written in the original sentence and semantically omitted. Merge combines two logic units with duplicated arguments without adding any conjunctions.
+Logic dependents are dependents of a function or one of its arguments that has logical meaning. Logic dependents cannot be included in logic units. 
+Logical dependency is indicated with X -> Y where X and Y are one of the components declared. If one component (X) depends on another component (Y), the logical dependency should be notated with X -> Y where X is called dependent and Y is called head. If there are multiple logical dependencies, each notation should be separated by a semi-colon(;).
+
+### Instruction
+Given a sentence and its logical dependency structure, accumulate each component of the logical dependency structure to finally reach the original sentence.
+The followings are rules for accumulation:
+1. Start with copying logic units.
+2. If a logic dependent D is the only dependent of a logic unit U, then integrate D into U and accumulate the updated U.
+3. If a logic dependent D1 depends on another logic dependent D2, then integrate D1 into a logic unit U that includes D2 and accumulate the updated U.
+4. If more than one logic dependents D1, D2, ... Dk depend on a logic unit U, then accumulate k setences that include U and each logic dependent Di (i=1,2,...k). After that, integrate all logic dependents into U and accumulate the updated U.
+5. If more than one components X1, X2, ... Xk depend on a logic coupler C, then integrate all components into C and accumulate the updated C.
+6. If one single component X depends on a logic coupler C, then integrate all dependents of X and X itself into C and accumulate the updated C.
+------
+# Sentence
+Each house is occupied by a different person
+# Structure
+U1="Each house is occupied by a different person"
+None
+
+# Sentence
+People have unique favorite book genres
+# Structure
+U1="People have unique favorite book genres"
+None
+
+# Sentence
+The person who loves fantasy books is the Norwegian
+# Structure
+U1="A person loves fantasy books", U2="A person is the Norwegian", C1="who"
+U1 -> C1; U2 -> C1
+
+# Sentence
+The cat lover and the person who loves biography books are next to each other
+# Structure
+U1="A person loves a cat", U2="A person loves biography books", U3="Two people are next to each other", C1="and"
+U1 -> C1; U2 -> C1; C1 -> U3
+
+# Sentence
+There are two houses between the Norwegian and Alice
+# Structure
+U1="A person is Norwegian", U2="There are two houses between a person and Alice"
+U1 -> U2
+###
+# Sentence
+Each house is occupied by a different person
+# Accumulation
+Each house is occupied by a different person
+
+# Sentence
+People have unique favorite book genres
+# Accumulation
+People have unique favorite book genres
+
+# Sentence
+The person who loves fantasy books is the Norwegian
+# Accumulation
+A person loves fantasy books
+A person is the Norwegian
+The person who loves fantasy books is the Norwegian
+
+# Sentence
+The cat lover and the person who loves biography books are next to each other
+# Accumulation
+A person loves a cat
+A person loves biography books
+Two people are next to each other
+A person loves cat and another person loves biography books
+The cat lover and the person who loves biography books are next to each other
+
+# Sentence
+There are two houses between the Norwegian and Alice
+# Accumulation
+A person is Norwegian
+There are two houses between a person and Alice
+There are two houses between the Norwegian and Alice
+------
+# Sentence
+The person who loves fantasy books is the Norwegian
+# Structure
+U1="A person is the Norwegian", D1="who loves fantasy books"
+D1 -> U1
+
+# Sentence
+The cat lover and the person who loves biography books are next to each other
+# Structure
+U1="Two people are next to each other", D1="the cat lover and the person who loves biography books"
+D1 -> U1
+
+# Sentence
+There are two houses between the Norwegian and Alice
+# Structure
+U1="A person is Norwegian", U2="A person is Alice", U3="There are two houses between two people", C1="and"
+U1 -> C1; U2 -> C1; C1 -> U3
+###
+# Sentence
+The person who loves fantasy books is the Norwegian
+# Accumulation
+A person is the Norwegian
+The person who loves fantasy books is the Norwegian
+
+# Sentence
+The cat lover and the person who loves biography books are next to each other
+# Accumulation
+Two people are next to each other
+The cat lover and the person who loves biography books are next to each other
+
+# Sentence
+There are two houses between the Norwegian and Alice
+# Accumulation
+A person is Norwegian
+A person is Alice
+There are two houses between two people
+A person is Norwegian and another person is Alice
+There are two houses between the Norwegian and Alice
+------
+# Sentence
+There are two houses between the Norwegian and Alice
+# Structure
+U1="There are two houses between two people", D1="the Norwegian and Alice"
+D1 -> U1
+###
+# Sentence
+There are two houses between the Norwegian and Alice
+# Accumulation
+There are two houses between two people
+There are two houses between the Norwegian and Alice
+------
+[[SENTENCE_STRUCTURE_PAIRS]]
+###

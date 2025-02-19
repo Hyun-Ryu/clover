@@ -1,0 +1,16 @@
+### Instruction:
+Your task is to select the most probable first-order logic formula that correctly translates the natural language sentence according to the declarations. Present your reasoning and solution in the following format:
+
+Reasoning:
+___
+Formula:
+___
+------
+### Input:
+Declarations:
+[[DECLARATIONS]]
+Formulas:
+[[FORMULAS]]
+Sentence:
+[[SENTENCE]]
+### Response:
