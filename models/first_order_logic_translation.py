@@ -108,23 +108,26 @@ class SequentialTranslator:
         outputs = []
         for data in raw_dataset:
             # a list of empty dictionaries for logic programs
-            final_constraints_list = []
-            for constraint in data[self.exp_description].split('\n'):
-                empty_dict = {
-                    "nl": constraint,
-                    "programs": []
-                }
-                final_constraints_list.append(empty_dict)
-
-            # insert each component to the dict
-            for i, code in enumerate(data[f"{self.exp_description}_translation"]):
-                for index, constraint in enumerate(data[self.exp_description].split('\n')):
-                    for line in code.split('\n'):
-                        tmp = constraint.lower().replace('boquet', 'bouquet')       # for typo in ZebraLogic
-                        if f'{constraint.lower()} :::' in line.lower() or f'{tmp} :::' in line.lower():
-                            translation_ = line.split(':::')[-1].strip()
-                            final_constraints_list[index]["programs"].append(translation_)
-                            break
+            if data["additional_constraints"] is None:
+                final_constraints_list = None
+            else:
+                final_constraints_list = []
+                for constraint in data[self.exp_description].split('\n'):
+                    empty_dict = {
+                        "nl": constraint,
+                        "programs": []
+                    }
+                    final_constraints_list.append(empty_dict)
+                
+                # insert each component to the dict
+                for i, code in enumerate(data[f"{self.exp_description}_translation"]):
+                    for index, constraint in enumerate(data[self.exp_description].split('\n')):
+                        for line in code.split('\n'):
+                            tmp = constraint.lower().replace('boquet', 'bouquet')       # for typo in ZebraLogic
+                            if f'{constraint.lower()} :::' in line.lower() or f'{tmp} :::' in line.lower():
+                                translation_ = line.split(':::')[-1].strip()
+                                final_constraints_list[index]["programs"].append(translation_)
+                                break
             
             # append as an ordered dict
             output_dict = {
